@@ -59,14 +59,19 @@ export default function CreateVestingDialog() {
         }, 0)
     }, [streams]);
 
-    const startDate = watch("start_date", Date.now());
-    const endDate = watch("end_date", Date.now());
+    // @ts-ignore
+    const startDate = watch("start_date", new Date());
+    // @ts-ignore
+    const duration = watch("duration", Date.now());
     const supply = watch("supply", 0);
+    // @ts-ignore
+
     const token = watch("token", false);
 
     const selectedToken = useMemo(() => {
             if (!token) {return;}
             return tokens.find(
+                // @ts-ignore
                 t => t.identifier === token);
         },
         [token]
@@ -175,7 +180,7 @@ export default function CreateVestingDialog() {
                         totalSupply={supply}
                         allocatedSupply={allocatedSupply}
                         defaultStartDate={startDate}
-                        defaultEndDate={endDate}
+                        defaultDuration={duration}
                         token={selectedToken}
                     />
                 </div>

@@ -67,7 +67,7 @@ export default function Select({name, options = {}, label, selectOptions, placeh
               <AiFillExclamationCircle className="h-5 w-5 text-red-500" aria-hidden="true"/>
             </div>
         )}
-
+        {/* @ts-ignore */}
         {!!errors[name] && <p className="mt-1 text-sm text-red-600">{errors[name].message}</p>}
       </div>
   );

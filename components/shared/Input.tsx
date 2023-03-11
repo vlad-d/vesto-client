@@ -84,6 +84,7 @@ export default function Input(
                     </div>
                 )}
             </div>
+            {/* @ts-ignore */}
             {!!errors[name] && <p className="mt-1 text-sm text-red-600">{errors[name].message}</p>}
         </div>
     );

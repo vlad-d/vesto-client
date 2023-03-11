@@ -13,7 +13,7 @@ export const getVestingSchedules = async (): Promise<VestingSchedule[]> => {
 
     if (error || !data) {return [];}
 
-    return data;
+    return data as VestingSchedule[];
 };
 
 export const getVestingSchedule = async (id: number): Promise<VestingSchedule> => {

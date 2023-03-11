@@ -51,6 +51,7 @@ export default function DatePicker({label, name, options, initDate}: IInput) {
                 </div>
             )}
 
+            {/* @ts-ignore */}
             {!!errors[name] && <p className="mt-1 text-sm text-red-600">{errors[name].message}</p>}
         </div>
     );
