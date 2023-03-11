@@ -1,7 +1,8 @@
 import { useAuth } from '@elrond-giants/erd-react-hooks/dist';
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import {useMemo, useState} from 'react';
+import Link from "next/link";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -12,7 +13,13 @@ const navigation = [
 
 export default function Layout({ children }: any) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { address, logout } = useAuth();
+  const { address, logout, authenticated } = useAuth();
+  const handle = useMemo(() => {
+    if (!address) {
+      return "";
+    }
+    return address.substring(0, 4) + "..." + address.substring(address.length - 4);
+  }, [address]);
 
   return (
     <div className="bg-white">
@@ -46,9 +53,16 @@ export default function Layout({ children }: any) {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-              Log in <span aria-hidden="true">&rarr;</span>
-            </a>
+            {authenticated
+                ? <span className="text-sm font-semibold leading-6 text-gray-900">
+                  {handle}
+                </span>
+                : <Link
+                    href="/auth"
+                >
+                  Connect
+                </Link>
+            }
           </div>
         </nav>
         <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
