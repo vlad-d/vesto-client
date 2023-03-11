@@ -100,12 +100,16 @@ export default function Layout({ children }: any) {
                   ))}
                 </div>
                 <div className="py-6">
-                  <a
-                    href="#"
-                    className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  >
-                    Log in
-                  </a>
+                    {authenticated
+                        ? <span className="text-sm font-semibold leading-6 text-gray-900">
+                  {handle}
+                </span>
+                        : <Link
+                            href="/auth"
+                        >
+                          Connect
+                        </Link>
+                    }
                 </div>
               </div>
             </div>
