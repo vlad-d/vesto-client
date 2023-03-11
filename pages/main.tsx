@@ -19,7 +19,7 @@ export default function Main() {
     const {makeTransaction} = useTransaction();
     const makeTx = async () => {
         const contract = new SmartContract(
-            {address: new Address("erd1qqqqqqqqqqqqqpgqqsja3a4nu9u3l4d0m77ys947nka2cjwflpzqrzz8sc")}
+            {address: new Address("")}
         );
         const structTypeStream = new StructType("BuildingAttributes", [
 
@@ -58,9 +58,6 @@ export default function Main() {
     return (
         <AdminLayout>
             <CreateVestingDialog/>
-            <button onClick={makeTx}>
-                Make tx
-            </button>
 
         </AdminLayout>
     );

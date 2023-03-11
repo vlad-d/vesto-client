@@ -6,6 +6,11 @@ import Input from "../shared/Input";
 import DatePicker from "../shared/DatePicker";
 import CreateStream from "./CreateStream";
 import {addMonths} from "date-fns";
+import {buildVestingTxInteraction} from "../../utils/transactions";
+import {useAuth} from "@elrond-giants/erd-react-hooks/dist";
+import {Nonce} from "@multiversx/sdk-network-providers/out/primitives";
+import {chainId, network} from "../../config";
+import {useTransaction} from "../../hooks/useTransaction";
 
 const tokens: Token[] = [
     {
@@ -14,6 +19,14 @@ const tokens: Token[] = [
         name: "AstroElrond",
         decimals: 18,
         owner: "asdsad",
+        image: ""
+    },
+    {
+        identifier: "TBH-67f97f",
+        balance: "50000000000000000000",
+        name: "TBH",
+        decimals: 18,
+        owner: "asdsada",
         image: ""
     }
 ];
@@ -26,6 +39,8 @@ type FormValues = {
 };
 
 export default function CreateVestingDialog() {
+    const {address, nonce, env} = useAuth();
+    const {makeTransaction} = useTransaction();
     const formMethods = useForm<FormValues>();
     const {handleSubmit, reset, watch} = formMethods;
     const [loading, setLoading] = useState(false);
@@ -57,12 +72,24 @@ export default function CreateVestingDialog() {
         [token]
     );
 
-    const onSubmitHandler = (values: FormValues) => {
-        const {start_date, duration, supply, token} = values;
-        const endDate = addMonths(start_date, duration);
+    const onSubmitHandler = async (values: FormValues) => {
+        const {supply, token} = values;
         setLoading(true);
+        const interaction = buildVestingTxInteraction(
+            {
+                supply,
+                token,
+                owner: address!,
+                streams
+            },
+            selectedToken!.decimals
+        )
+            .withNonce(new Nonce(nonce))
+            .withGasLimit(500_000_000) //todo: compute gas limit
+            .withChainID(chainId!);
 
-
+        const txResult = await makeTransaction(interaction.buildTransaction());
+        setLoading(false);
     }
 
     const onCreateStream = (stream: VestingStream) => {
@@ -122,6 +149,9 @@ export default function CreateVestingDialog() {
                             }}
                         />
                     </div>
+                    <button type="submit">
+                        Make TX
+                    </button>
                 </form>
                 <div className="flex flex-col space-y-6">
                     {streams.map(stream => (
