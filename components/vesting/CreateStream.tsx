@@ -35,10 +35,9 @@ export default function CreateStream(
     const {handleSubmit, reset, watch} = formMethods;
     const onSubmitHandler = (values: FormValues) => {
         const {start_date, duration, recipient, qty} = values;
-
         onCreate({
-            start_date: start_date.getDate(),
-            end_date: addMonths(start_date, duration).getDate(),
+            start_date: start_date.getTime(),
+            end_date: addMonths(start_date, duration).getTime(),
             recipient,
             qty,
             amount: (qty / 100) * totalSupply

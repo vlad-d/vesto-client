@@ -27,8 +27,8 @@ export type VestingSchedule = {
     owner: string;
     token_identifier: string;
     deposit: number;
-    decimals: number;
     tx_hash: string;
+    token_metadata: FungibleESDT,
     items?: VestingScheduleItem[];
 };
 export type VestingScheduleItem = {
@@ -38,4 +38,45 @@ export type VestingScheduleItem = {
     created_at: string;
     amount: number;
     tx_hash: string;
+}
+
+export interface FungibleESDT {
+    type: "FungibleESDT";
+    identifier: string;
+    name?: string;
+    ticker: string;
+    owner: string;
+    minted: string;
+    burnt: string;
+    initialMinted: string;
+    decimals: number;
+    isPaused: boolean;
+    assets?: {
+        website: string;
+        description: string;
+        status: string;
+        pngUrl: string;
+        svgUrl: string;
+        lockedAccounts: Record<string, string>;
+        social?: {
+            email?: string;
+            blog?: string;
+            twitter?: string;
+            discord?: string;
+            whitepaper?: string;
+            instagram?: string;
+        };
+    };
+    transactions: number;
+    accounts: number;
+    canUpgrade: boolean;
+    canMint: boolean;
+    canBurn: boolean;
+    canChangeOwner: boolean;
+    canAddSpecialRoles: boolean;
+    canPause: boolean;
+    canFreeze: boolean;
+    canWipe: boolean;
+    supply: string;
+    circulatingSupply: string;
 }

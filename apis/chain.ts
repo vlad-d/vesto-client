@@ -1,13 +1,10 @@
-import {Token} from "../common/types";
+import {FungibleESDT, Token} from "../common/types";
 import axios from "axios";
 
-const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_NETWORK_API_ADDRESS!
-});
-export const getTokensData = async (tokens: string[]): Promise<Token[]> => {
-    const {data} = await api.get("/tokens", {
+export const getTokenData = async (token: string): Promise<FungibleESDT> => {
+    const {data} = await axios.get("/api/esdt", {
         params: {
-            identifiers: tokens.join(",")
+            token
         }
     });
 
