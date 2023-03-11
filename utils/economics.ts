@@ -1,6 +1,5 @@
 import BigNumber from "bignumber.js";
 import {egldPrice} from "../apis/economics";
-import {denomination} from "../config";
 
 
 export const usdToCurrentEgld = async (usdAmount: number | BigNumber): Promise<number> => {
@@ -24,11 +23,11 @@ export const usdToEgld = (usdAmount: number | BigNumber, egldValue: number | Big
     return total.toNumber();
 }
 
-export const denominate = (value: number | string, decimalPlaces = 3): BigNumber => {
+export const denominate = (value: number | string, decimals: number, decimalPlaces = 3): BigNumber => {
     const bigValue =  new BigNumber(value)
 
     return bigValue
-        .shiftedBy(-(denomination ?? 18))
+        .shiftedBy(-(decimals))
         .decimalPlaces(decimalPlaces);
 
 };

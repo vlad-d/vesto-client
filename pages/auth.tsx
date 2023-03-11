@@ -28,7 +28,7 @@ const Auth: NextPage = () => {
         }
 
         (async () => {
-            await router.replace(homePath);
+            await router.replace("/main");
         })();
 
     }, [router, authenticated]);

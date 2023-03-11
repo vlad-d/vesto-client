@@ -4,6 +4,7 @@ import store from "../redux/store";
 import {Provider as ReduxProvider} from "react-redux";
 import Notifications from "../components/Notifications";
 import {AuthContextProvider} from "@elrond-giants/erd-react-hooks";
+import "react-datepicker/dist/react-datepicker.css";
 
 function MyApp({Component, pageProps}: AppProps) {
     return (
