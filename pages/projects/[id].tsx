@@ -76,21 +76,21 @@ export default function Project() {
                         </div>
                         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
                             <dl className="sm:divide-y sm:divide-gray-200">
-                                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                                <div className="py-4 sm:grid sm:grid-cols-4 sm:gap-4 sm:py-5 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-500">Token</dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
                                         {token.identifier}
                                     </dd>
                                 </div>
-                                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                                <div className="py-4 sm:grid sm:grid-cols-4 sm:gap-4 sm:py-5 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-500">Supply</dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
                                         {token.supply}
                                     </dd>
                                 </div>
-                                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                                <div className="py-4 sm:grid sm:grid-cols-4 sm:gap-4 sm:py-5 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-500">Holders</dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
                                         {token.accounts}
                                     </dd>
                                 </div>
@@ -108,21 +108,21 @@ export default function Project() {
                         </div>
                         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
                             <dl className="sm:divide-y sm:divide-gray-200">
-                                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                                <div className="py-4 sm:grid sm:grid-cols-4 sm:gap-4 sm:py-5 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-500">Owner</dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
                                         {token.owner}
                                     </dd>
                                 </div>
-                                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                                <div className="py-4 sm:grid sm:grid-cols-4 sm:gap-4 sm:py-5 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-500">Circulating</dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
                                         {token.circulatingSupply}
                                     </dd>
                                 </div>
-                                <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                                <div className="py-4 sm:grid sm:grid-cols-4 sm:gap-4 sm:py-5 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-500">Social</dt>
-                                    <dd className="flex items-center flex-wrap gap-3">
+                                    <dd className="flex items-center flex-wrap gap-3 sm:col-span-3">
                                         {social.map(s => (
                                             <a
                                                 key={s.platform}
