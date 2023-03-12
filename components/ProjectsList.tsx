@@ -1,35 +1,62 @@
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
-import { VestingSchedule } from '../common/types';
-import { denominate } from '../utils/economics';
-import { projectPath } from '../utils/routes';
-import { getVestingSchedules } from '../utils/supabase';
+import {VestingSchedule} from '../common/types';
+import {denominate} from '../utils/economics';
+import {projectPath} from '../utils/routes';
+import {getVestingSchedules, supabase} from '../utils/supabase';
 
 export default function ProjectsList() {
   const [vestings, setVestings] = useState<VestingSchedule[]>([]);
-  useEffect(() => {
-    (async () => {
-      const vestings = await getVestingSchedules();
 
-      setVestings(vestings);
-    })();
+  const loadVesting = async () => {
+    const vestings = await getVestingSchedules();
+    setVestings(vestings);
+  };
+  useEffect(() => {
+    loadVesting();
   }, []);
+
+  useEffect(() => {
+    const channel = supabase
+        .channel("db-messages")
+        .on(
+            "postgres_changes",
+            {
+              event: "INSERT",
+              schema: "public",
+              table: "vesting_schedule",
+            },
+            () => {
+              console.log("event is here")
+              loadVesting();
+            }
+        )
+        .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+
+  }, [])
   return (
-    <div className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-      <div className="mt-8 flow-root">
-        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="min-w-full divide-y divide-gray-100">
-              <thead>
+      <div className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+        <div className="mt-8 flow-root">
+          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <table className="min-w-full divide-y divide-gray-100">
+                <thead>
                 <tr>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                  <th scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                     Token
                   </th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  <th scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Vesting Allocation
                   </th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  <th scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Streams No.
                   </th>
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">

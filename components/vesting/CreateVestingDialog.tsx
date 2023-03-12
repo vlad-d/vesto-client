@@ -84,6 +84,7 @@ export default function CreateVestingDialog({open, setOpen}: Props) {
             .withGasLimit(500_000_000) //todo: compute gas limit
             .withChainID(chainId!);
 
+        setOpen(false);
         const txResult = await makeTransaction(interaction.buildTransaction());
         setLoading(false);
     }
@@ -95,7 +96,8 @@ export default function CreateVestingDialog({open, setOpen}: Props) {
     useEffect(() => {
         if (!authenticated) {return;}
         (async () => {
-            await getWalletTokens(address!);
+           const tokens = await getWalletTokens(address!);
+            setTokens(tokens);
         })()
     }, [authenticated]);
 

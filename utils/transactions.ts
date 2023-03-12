@@ -2,12 +2,11 @@ import {VestingStream, VestingType} from "../common/types";
 import {
     Address,
     AddressType, AddressValue, BigUIntType, BigUIntValue, ContractFunction, Field,
-    FieldDefinition, Interaction,
+    FieldDefinition, Interaction, List,
     SmartContract, Struct,
     StructType, TokenPayment, U64Type, U64Value
 } from "@multiversx/sdk-core/out";
 import BigNumber from "bignumber.js";
-import {Nonce} from "@multiversx/sdk-network-providers/out/primitives";
 
 const structTypeStream = new StructType("BuildingAttributes", [
     new FieldDefinition("recipient", "address", new AddressType()),
@@ -21,7 +20,7 @@ export const buildVestingTxInteraction = (vesting: VestingType, tokenDecimals: n
     const contract = new SmartContract({
         address: new Address(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS),
     });
-    console.log(vesting)
+
     const args = vesting.streams.map(stream => new Struct(structTypeStream, [
         new Field(new AddressValue(new Address(stream.recipient)), "recipient"),
         new Field(new BigUIntValue(stream.qty), "deposit"),
@@ -34,7 +33,7 @@ export const buildVestingTxInteraction = (vesting: VestingType, tokenDecimals: n
     return new Interaction(
         contract,
         new ContractFunction("createVestingSchedule"),
-        args
+        [new List(structTypeStream, args)]
     )
         .withSingleESDTTransfer(
             TokenPayment.fungibleFromAmount(
