@@ -9,10 +9,10 @@ import { homePath } from '../utils/routes';
 import Logo from './Logo';
 
 const navigation = [
-  { name: "Product", href: "#" },
-  { name: "Features", href: "#" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
+  { name: "About", href: "#" },
+  { name: "Projects", href: "#" },
+  { name: "FAQ", href: "#" },
+  { name: "CoinDrip", href: "#" },
 ];
 
 export default function Layout({ children }: any) {
@@ -53,7 +53,9 @@ export default function Layout({ children }: any) {
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             {authenticated ? (
-              <span className="text-sm font-semibold leading-6 text-gray-900">{handle}</span>
+              <span className="text-sm font-semibold leading-6 text-gray-900" onClick={logout}>
+                {handle}
+              </span>
             ) : (
               <Link href="/auth">Connect</Link>
             )}
@@ -91,7 +93,12 @@ export default function Layout({ children }: any) {
                 </div>
                 <div className="py-6">
                   {authenticated ? (
-                    <span className="text-sm font-semibold leading-6 text-gray-900">{handle}</span>
+                    <span
+                      className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      onClick={logout}
+                    >
+                      {handle}
+                    </span>
                   ) : (
                     <Link href="/auth">Connect</Link>
                   )}
