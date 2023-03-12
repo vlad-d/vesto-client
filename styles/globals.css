@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.auth-button {
+  @apply bg-indigo-600 text-white py-2 rounded-lg;
+}
