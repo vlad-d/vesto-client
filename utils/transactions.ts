@@ -19,6 +19,7 @@ import {
 import BigNumber from 'bignumber.js';
 
 import { VestingType } from '../common/types';
+import moment from "moment";
 
 const structTypeStream = new StructType("BuildingAttributes", [
   new FieldDefinition("recipient", "address", new AddressType()),
@@ -31,16 +32,17 @@ export const buildVestingTxInteraction = (vesting: VestingType, tokenDecimals: n
   const contract = new SmartContract({
     address: new Address(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS),
   });
-
+    console.log(moment(vesting.streams[0].start_date).unix())
   const args = vesting.streams.map(
     (stream) =>
       new Struct(structTypeStream, [
         new Field(new AddressValue(new Address(stream.recipient)), "recipient"),
         new Field(new BigUIntValue(stream.qty), "deposit"),
-        new Field(new U64Value(stream.start_date * 1000), "start_time"),
-        new Field(new U64Value(stream.end_date * 1000), "end_time"),
+        new Field(new U64Value(moment(stream.start_date).add(10, "minute").unix()), "start_time"),
+        new Field(new U64Value(moment(stream.end_date).unix()), "end_time"),
       ])
   );
+
 
   return new Interaction(contract, new ContractFunction("createVestingSchedule"), [
     new List(structTypeStream, args),

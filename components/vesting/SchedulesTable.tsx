@@ -11,6 +11,10 @@ import ScheduleProgress from './ScheduleProgress';
 import {querySc} from "../../apis/queries";
 import {decimalToHex} from "../../utils/contractQueries";
 
+type Claimable = {
+  streamId: number;
+  amount: number;
+}
 export default function SchedulesTable({
   vestingData,
   vestingSchedules,
@@ -23,7 +27,7 @@ export default function SchedulesTable({
   const {address, authenticated, nonce} = useAuth();
   const [loadingClaim, setLoadingClaim] = useState(false);
   const {makeTransaction} = useTransaction();
-  const [claimable, setClaimable] = useState([]);
+  const [claimable, setClaimable] = useState<Claimable[]>([]);
 
 
   const claimFromStream = async (streamId: number) => {
@@ -54,7 +58,7 @@ export default function SchedulesTable({
   };
 
   const fetchClaimableAmount = async (streamId: number) => {
-    return querySc(
+    const res = await querySc(
         process.env.NEXT_PUBLIC_COINDRIP_ADDRESS!,
         "recipientBalance",
         {
@@ -62,6 +66,10 @@ export default function SchedulesTable({
           outputType: "string"
         }
     );
+
+    setClaimable(prev => [...prev, {streamId, amount: res}]);
+
+    return res;
   };
 
   const fetchClaimableAmounts = async () => {
@@ -69,10 +77,6 @@ export default function SchedulesTable({
         .filter(i => Address.fromHex(i.address).bech32() === address)
         .map(i => fetchClaimableAmount(i.stream_id));
     console.log("streams", streams);
-
-    const res = await Promise.all(streams);
-    console.log(res)
-
   };
 
   useEffect(() => {
@@ -144,7 +148,7 @@ export default function SchedulesTable({
                           className="text-indigo-600 hover:text-indigo-900"
                           onClick={() => claimFromStream(vesting.stream_id)}
                         >
-                          Claim
+                          Claim {claimable.find(c => c.streamId === vesting.stream_id)?.amount}
                         </button>
                       )}
                     </td>
