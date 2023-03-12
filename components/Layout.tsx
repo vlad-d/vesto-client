@@ -1,9 +1,11 @@
 import { useAuth } from '@elrond-giants/erd-react-hooks/dist';
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import {useMemo, useState} from 'react';
-import Link from "next/link";
-import {formatAddress} from "../utils/presentation";
+import Link from 'next/link';
+import { useMemo, useState } from 'react';
+
+import { formatAddress } from '../utils/presentation';
+import Logo from './Logo';
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -29,11 +31,7 @@ export default function Layout({ children }: any) {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                alt=""
-              />
+              <Logo className="h-6" />
             </a>
           </div>
           <div className="flex lg:hidden">
@@ -54,16 +52,11 @@ export default function Layout({ children }: any) {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            {authenticated
-                ? <span className="text-sm font-semibold leading-6 text-gray-900">
-                  {handle}
-                </span>
-                : <Link
-                    href="/auth"
-                >
-                  Connect
-                </Link>
-            }
+            {authenticated ? (
+              <span className="text-sm font-semibold leading-6 text-gray-900">{handle}</span>
+            ) : (
+              <Link href="/auth">Connect</Link>
+            )}
           </div>
         </nav>
         <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -101,16 +94,11 @@ export default function Layout({ children }: any) {
                   ))}
                 </div>
                 <div className="py-6">
-                    {authenticated
-                        ? <span className="text-sm font-semibold leading-6 text-gray-900">
-                  {handle}
-                </span>
-                        : <Link
-                            href="/auth"
-                        >
-                          Connect
-                        </Link>
-                    }
+                  {authenticated ? (
+                    <span className="text-sm font-semibold leading-6 text-gray-900">{handle}</span>
+                  ) : (
+                    <Link href="/auth">Connect</Link>
+                  )}
                 </div>
               </div>
             </div>
