@@ -5,6 +5,7 @@ import DatePicker from "../shared/DatePicker";
 import {useMemo} from "react";
 import {denominate} from "../../utils/economics";
 import { addMonths } from 'date-fns'
+import moment from "moment";
 
 type Props = {
     allocatedSupply: number;
@@ -37,8 +38,8 @@ export default function CreateStream(
         console.log(values)
         const {start_date, duration, recipient, qty} = values;
         onCreate({
-            start_date: start_date.getTime(),
-            end_date: addMonths(start_date, duration).getTime(),
+            start_date: start_date,
+            end_date: moment(start_date).add(duration, "months").toDate(),
             recipient,
             qty,
             amount: (qty / 100) * totalSupply

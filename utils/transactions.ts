@@ -37,8 +37,8 @@ export const buildVestingTxInteraction = (vesting: VestingType, tokenDecimals: n
     (stream) =>
       new Struct(structTypeStream, [
         new Field(new AddressValue(new Address(stream.recipient)), "recipient"),
-        new Field(new BigUIntValue(stream.qty), "deposit"),
-        new Field(new U64Value(moment(stream.start_date).add(10, "minute").unix()), "start_time"),
+        new Field(new BigUIntValue(TokenPayment.fungibleFromAmount(vesting.token, stream.amount, tokenDecimals).valueOf() ), "deposit"),
+        new Field(new U64Value(moment(stream.start_date).add(5, "minute").unix()), "start_time"),
         new Field(new U64Value(moment(stream.end_date).unix()), "end_time"),
       ])
   );
