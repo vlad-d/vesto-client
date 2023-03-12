@@ -37,12 +37,13 @@ export default function DatePicker({label, name, options, initDate}: IInput) {
     return (
         <div className="relative">
             <label htmlFor={id}
-                   className="block font-semibold text-xs text-primary dark:text-primary-dark uppercase mb-2">
+                   className="block font-semibold text-xs text-indigo-500 uppercase mb-2">
                 {label}
             </label>
             <ReactDatePicker
                 onChange={onChange}
                 selected={date}
+                className="block w-full p-1.5  border shadow-sm focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm"
             />
 
             {!!errors[name] && (

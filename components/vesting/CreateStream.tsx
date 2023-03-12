@@ -34,6 +34,7 @@ export default function CreateStream(
     const formMethods = useForm<FormValues>();
     const {handleSubmit, reset, watch} = formMethods;
     const onSubmitHandler = (values: FormValues) => {
+        console.log(values)
         const {start_date, duration, recipient, qty} = values;
         onCreate({
             start_date: start_date.getTime(),
@@ -55,64 +56,82 @@ export default function CreateStream(
     return (
         <FormProvider {...formMethods}>
             <form
-                className="flex flex-col w-full items-start px-4 gap-y-8 border border-gray-500 p-2 rounded-md"
+                id="stream-form"
+                className="flex flex-col w-full items-start px-4 gap-y-8 border border-gray-200 p-2 rounded-md"
                 onSubmit={handleSubmit(onSubmitHandler)}
             >
-                <Input
-                    label="Recipient"
-                    name="recipient"
-                    placeholder=""
-                    options={{
-                        required: true
-                    }}
-                />
-                <div className="flex items-center space-x-2">
+                <div className="w-full">
                     <Input
-                        label="Quantity (%)"
-                        name="qty"
+                        label="Recipient"
+                        name="recipient"
+                        placeholder=""
+                        options={{
+                            required: true
+                        }}
+                    />
+                </div>
+                <div className="flex items-center space-x-3 w-full">
+                    <div className="w-full">
+                        <Input
+                            label="Quantity - %"
+                            name="qty"
+                            placeholder=""
+                            type="number"
+                            min="1"
+                            max={100 - allocatedSupply}
+                            step={1}
+                            options={{
+                                required: true
+                            }}
+                        />
+                    </div>
+                    <div className="w-full">
+                        <span
+                            className="block font-semibold text-xs text-indigo-500 dark:text-indigo-600 uppercase mb-2"
+                        >
+                            Amount - {token.name}
+                        </span>
+                        <span
+                            className="flex items-center justify-center bg-gray-100 text-indigo-500 p-1.5">
+                        {amount}
+                        </span>
+                    </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                    <DatePicker
+                        name="start_date"
+                        initDate={defaultStartDate}
+                        label="Start Date"
+                        options={{
+                            required: true
+                        }}
+                    />
+                    <Input
+                        label="Duration (months)"
+                        name="duration"
                         placeholder=""
                         type="number"
                         min="1"
-                        max={100 - allocatedSupply}
                         step={1}
                         options={{
                             required: true
                         }}
                     />
-                    <span>{amount}</span>
                 </div>
-                <DatePicker
-                    name="start_date"
-                    initDate={defaultStartDate}
-                    label="Start Date"
-                    options={{
-                        required: true
-                    }}
-                />
-                <Input
-                    label="Duration (months)"
-                    name="duration"
-                    placeholder=""
-                    type="number"
-                    min="1"
-                    step={1}
-                    options={{
-                        required: true
-                    }}
-                />
-                <div className="flex items-center space-x-3">
-                    <button
-                        type="button"
-                        className="rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                        onClick={() => reset()}
-                    >
-                        Cancel
-                    </button>
+                <div className="flex items-center gap-3 flex-row-reverse w-full">
                     <button
                         type="submit"
-                        className="rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className="font-semibold text-indigo-500 hover:text-indigo-600"
+                        form="stream-form"
                     >
                         Add
+                    </button>
+                    <button
+                        type="button"
+                        className="font-semibold text-gray-500 hover:text-gray-600"
+                        onClick={() => reset()}
+                    >
+                        Reset
                     </button>
                 </div>
             </form>

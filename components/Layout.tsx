@@ -3,6 +3,7 @@ import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import {useMemo, useState} from 'react';
 import Link from "next/link";
+import {formatAddress} from "../utils/presentation";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -18,7 +19,7 @@ export default function Layout({ children }: any) {
     if (!address) {
       return "";
     }
-    return address.substring(0, 4) + "..." + address.substring(address.length - 4);
+    return formatAddress(address);
   }, [address]);
 
   return (
