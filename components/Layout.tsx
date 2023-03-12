@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
 import { formatAddress } from '../utils/presentation';
+import { homePath } from '../utils/routes';
 import Logo from './Logo';
 
 const navigation = [
@@ -29,10 +30,9 @@ export default function Layout({ children }: any) {
       <header className="absolute inset-x-0 top-0 z-50">
         <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
           <div className="flex lg:flex-1">
-            <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
+            <Link href={homePath}>
               <Logo className="h-6" />
-            </a>
+            </Link>
           </div>
           <div className="flex lg:hidden">
             <button
@@ -65,11 +65,7 @@ export default function Layout({ children }: any) {
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your Company</span>
-                <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                  alt=""
-                />
+                <Logo className="h-8" />
               </a>
               <button
                 type="button"
