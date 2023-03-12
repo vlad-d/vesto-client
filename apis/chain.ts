@@ -15,9 +15,9 @@ export const getTokenData = async (token: string): Promise<FungibleESDT> => {
 export const getWalletTokens = async (address: string) => {
     // We use these dummy tokens on devnet because
     // there is no metadata set for them on devnet
-    if (process.env.NODE_ENV !== "production") {
-        return dummyTokens;
-    }
+
+    return dummyTokens;
+    
 
     const {data} = await axios.get(
         `${process.env.NEXT_PUBLIC_NETWORK_API_ADDRESS}/accounts/${address}/tokens`
