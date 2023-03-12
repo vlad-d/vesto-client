@@ -10,3 +10,11 @@ export const getTokenData = async (token: string): Promise<FungibleESDT> => {
 
     return data;
 };
+
+export const getWalletTokens = async (address: string) => {
+    const {data} = await axios.get(
+        `${process.env.NEXT_PUBLIC_NETWORK_API_ADDRESS}/accounts/${address}/tokens`
+    );
+
+    console.log(data);
+};

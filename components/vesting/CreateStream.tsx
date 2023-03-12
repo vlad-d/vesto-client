@@ -1,4 +1,4 @@
-import {Token, VestingStream} from "../../common/types";
+import {FungibleESDT, VestingStream} from "../../common/types";
 import {FormProvider, useForm} from "react-hook-form";
 import Input from "../shared/Input";
 import DatePicker from "../shared/DatePicker";
@@ -12,7 +12,7 @@ type Props = {
     onCreate: (stream: VestingStream) => void;
     defaultStartDate: Date;
     defaultDuration: number;
-    token: Token;
+    token: FungibleESDT;
 };
 
 type FormValues = {

@@ -1,5 +1,5 @@
-import {Token, VestingStream} from "../../common/types";
-import {useMemo, useState} from "react";
+import {FungibleESDT, Token, VestingStream} from "../../common/types";
+import {useEffect, useMemo, useState} from "react";
 import {FormProvider, useForm} from "react-hook-form";
 import Select from "../shared/Select";
 import Input from "../shared/Input";
@@ -14,25 +14,9 @@ import {useTransaction} from "../../hooks/useTransaction";
 import Popup from "../shared/Dialog";
 import {formatAddress} from "../../utils/presentation";
 import {denominate} from "../../utils/economics";
+import {IOption} from "../shared/SelectElement";
+import {getWalletTokens} from "../../apis/chain";
 
-const tokens: Token[] = [
-    {
-        identifier: "ASTRO-91f2cc",
-        balance: "50000000000000000000",
-        name: "AstroElrond",
-        decimals: 18,
-        owner: "asdsad",
-        image: ""
-    },
-    {
-        identifier: "TBH-67f97f",
-        balance: "50000000000000000000",
-        name: "TBH",
-        decimals: 18,
-        owner: "asdsada",
-        image: ""
-    }
-];
 
 type FormValues = {
     start_date: Date;
@@ -45,15 +29,16 @@ type Props = {
     setOpen: (value: boolean) => void
 }
 export default function CreateVestingDialog({open, setOpen}: Props) {
-    const {address, nonce, env} = useAuth();
+    const {address, nonce, authenticated} = useAuth();
     const {makeTransaction} = useTransaction();
     const formMethods = useForm<FormValues>();
+    const [tokens, setTokens] = useState<FungibleESDT[]>([]);
     const {handleSubmit, reset, watch} = formMethods;
     const [loading, setLoading] = useState(false);
-    const mapTokenOption = (token: Token) => ({
+    const mapTokenOption = (token: FungibleESDT): IOption => ({
         id: token.identifier,
-        name: token.name,
-        icon: <img src={token.image} className="w-5 h-5 rounded-full"/>
+        name: token.name ?? token.identifier,
+        icon: <img src={token.assets?.pngUrl} className="w-5 h-5 rounded-full"/>
     })
     const selectOptions = tokens.map(t => mapTokenOption(t));
     const [streams, setStreams] = useState<VestingStream[]>([]);
@@ -104,9 +89,15 @@ export default function CreateVestingDialog({open, setOpen}: Props) {
     }
 
     const onCreateStream = (stream: VestingStream) => {
-        console.log(stream)
         setStreams(streams => [...streams, stream]);
     };
+
+    useEffect(() => {
+        if (!authenticated) {return;}
+        (async () => {
+            await getWalletTokens(address!);
+        })()
+    }, [authenticated]);
 
     return (
         <Popup open={open} setOpen={setOpen}>
@@ -132,7 +123,9 @@ export default function CreateVestingDialog({open, setOpen}: Props) {
                                         required: true
                                     }}
                                 />
+
                             </div>
+
                             <div className="w-full">
                                 <Input
                                     label="Supply"
@@ -144,30 +137,7 @@ export default function CreateVestingDialog({open, setOpen}: Props) {
                                     }}
                                 />
                             </div>
-                            {/*<div className="w-full">*/}
-                            {/*    <DatePicker*/}
-                            {/*        name="start_date"*/}
-                            {/*        initDate={new Date()}*/}
-                            {/*        label="Start Date"*/}
-                            {/*        options={{*/}
-                            {/*            required: true*/}
-                            {/*        }}*/}
-                            {/*    />*/}
-                            {/*</div>*/}
-                            {/*<div className="w-full">*/}
-                            {/*    <Input*/}
-                            {/*        label="Duration (months)"*/}
-                            {/*        name="duration"*/}
-                            {/*        placeholder=""*/}
-                            {/*        type="number"*/}
-                            {/*        min="1"*/}
-                            {/*        step={1}*/}
-                            {/*        options={{*/}
-                            {/*            required: true*/}
-                            {/*        }}*/}
-                            {/*    />*/}
-                            {/*</div>*/}
-                            <span className="">Recipients</span>
+                            <span className="text-indigo-500">Recipients</span>
                             <div className="flex flex-col space-y-4 mt-2">
                                 {streams.map(stream => (
                                     <div className="flex flex-col w-full space-y-2"
