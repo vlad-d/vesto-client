@@ -9,6 +9,7 @@ import { FungibleESDT, VestingSchedule, VestingScheduleItem } from '../../common
 import { chainId, coinDripContractAddress } from '../../config';
 import { useTransaction } from '../../hooks/useTransaction';
 import { decimalToHex } from '../../utils/contractQueries';
+import { denominate } from '../../utils/economics';
 import ScheduleProgress from './ScheduleProgress';
 
 type Claimable = {
@@ -59,7 +60,7 @@ export default function SchedulesTable({
   const fetchClaimableAmount = async (streamId: number) => {
     const res = await querySc(coinDripContractAddress, "recipientBalance", {
       args: [decimalToHex(streamId)],
-      outputType: "string",
+      outputType: "int",
     });
 
     setClaimable((prev) => [...prev, { streamId, amount: res.data }]);
@@ -122,7 +123,9 @@ export default function SchedulesTable({
                       <div className="flex items-center">{Address.fromHex(vesting.address).bech32()}</div>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      <div className="text-gray-900">{vesting.amount}</div>
+                      <div className="text-gray-900">
+                        {denominate(vesting.amount || 0, token.decimals, 2).toString()}
+                      </div>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       <ScheduleProgress schedule={vesting} />
@@ -139,7 +142,12 @@ export default function SchedulesTable({
                           className="text-indigo-600 hover:text-indigo-900"
                           onClick={() => claimFromStream(vesting.stream_id)}
                         >
-                          Claim {claimable.find((c) => c.streamId === vesting.stream_id)?.amount}
+                          Claim{" "}
+                          {denominate(
+                            claimable.find((c) => c.streamId === vesting.stream_id)?.amount || 0,
+                            token.decimals,
+                            2
+                          ).toString()}
                         </button>
                       )}
                     </td>
