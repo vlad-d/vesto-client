@@ -29,7 +29,7 @@ export type VestingSchedule = {
     deposit: number;
     tx_hash: string;
     token_metadata: FungibleESDT,
-    items?: VestingScheduleItem[];
+    vesting_schedule_items?: VestingScheduleItem[];
 };
 export type VestingScheduleItem = {
     stream_id: number;
@@ -38,6 +38,8 @@ export type VestingScheduleItem = {
     created_at: string;
     amount: number;
     tx_hash: string;
+    start_time: string;
+    end_time: string;
 }
 
 export interface FungibleESDT {

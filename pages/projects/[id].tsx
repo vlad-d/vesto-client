@@ -6,6 +6,7 @@ import {getVestingSchedule} from "../../utils/supabase";
 import Layout from "../../components/Layout";
 import {getTokenData} from "../../apis/chain";
 import {denominate} from "../../utils/economics";
+import SchedulesTable from "../../components/vesting/SchedulesTable";
 
 export default function Project() {
     const router = useRouter();
@@ -137,6 +138,14 @@ export default function Project() {
                         </div>
                     </div>
 
+                </div>
+                }
+                {project && token && <div className="mt-6">
+                    <SchedulesTable
+                        vestingData={project}
+                        vestingSchedules={project.vesting_schedule_items!}
+                        token={token}
+                    />
                 </div>
                 }
             </div>
