@@ -10,3 +10,7 @@ export const getTotalTokensLeft = async (): Promise<number> => {
 
     return parseInt(data, 10);
 };
+
+export function decimalToHex(d: number | string) {
+    return ("0" + Number(d).toString(16)).slice(-2).toUpperCase();
+}

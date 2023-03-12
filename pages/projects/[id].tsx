@@ -1,14 +1,15 @@
 import {useRouter} from "next/router";
 import {useEffect, useMemo, useState} from "react";
 import {FungibleESDT, Token, VestingSchedule} from "../../common/types";
-import {tr} from "date-fns/locale";
 import {getVestingSchedule} from "../../utils/supabase";
 import Layout from "../../components/Layout";
 import {getTokenData} from "../../apis/chain";
 import {denominate} from "../../utils/economics";
 import SchedulesTable from "../../components/vesting/SchedulesTable";
+import {useAuth} from "@elrond-giants/erd-react-hooks/dist";
 
 export default function Project() {
+    const {} = useAuth();
     const router = useRouter();
     const [project, setProject] = useState<VestingSchedule | null>(null);
     const [loading, setLoading] = useState(true);
@@ -40,6 +41,7 @@ export default function Project() {
         setToken(token);
         setTokenLoading(false);
     };
+
 
     useEffect(() => {
         if (!router.isReady) {return;}

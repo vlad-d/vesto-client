@@ -8,6 +8,8 @@ import { FungibleESDT, VestingSchedule, VestingScheduleItem } from '../../common
 import { chainId, coinDripContractAddress } from '../../config';
 import { useTransaction } from '../../hooks/useTransaction';
 import ScheduleProgress from './ScheduleProgress';
+import {querySc} from "../../apis/queries";
+import {decimalToHex} from "../../utils/contractQueries";
 
 export default function SchedulesTable({
   vestingData,
@@ -18,9 +20,11 @@ export default function SchedulesTable({
   vestingData: VestingSchedule;
   token: FungibleESDT;
 }) {
-  const { address, authenticated, nonce } = useAuth();
+  const {address, authenticated, nonce} = useAuth();
   const [loadingClaim, setLoadingClaim] = useState(false);
-  const { makeTransaction } = useTransaction();
+  const {makeTransaction} = useTransaction();
+  const [claimable, setClaimable] = useState([]);
+
 
   const claimFromStream = async (streamId: number) => {
     if (!streamId) return;
@@ -49,33 +53,66 @@ export default function SchedulesTable({
     }
   };
 
+  const fetchClaimableAmount = async (streamId: number) => {
+    return querySc(
+        process.env.NEXT_PUBLIC_COINDRIP_ADDRESS!,
+        "recipientBalance",
+        {
+          args: [decimalToHex(streamId)],
+          outputType: "string"
+        }
+    );
+  };
+
+  const fetchClaimableAmounts = async () => {
+    const streams = vestingSchedules
+        .filter(i => Address.fromHex(i.address).bech32() === address)
+        .map(i => fetchClaimableAmount(i.stream_id));
+    console.log("streams", streams);
+
+    const res = await Promise.all(streams);
+    console.log(res)
+
+  };
+
+  useEffect(() => {
+    if (!authenticated || !address || !vestingSchedules.length) {return;}
+    fetchClaimableAmounts();
+  }, [vestingSchedules, authenticated, address]);
+
+
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">Streams</h1>
-          <p className="mt-2 text-sm text-gray-700">A list of all the vesting schedules.</p>
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="sm:flex sm:items-center">
+          <div className="sm:flex-auto">
+            <h1 className="text-base font-semibold leading-6 text-gray-900">Streams</h1>
+            <p className="mt-2 text-sm text-gray-700">A list of all the vesting schedules.</p>
+          </div>
         </div>
-      </div>
-      <div className="mt-8 flow-root">
-        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead>
+        <div className="mt-8 flow-root">
+          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead>
                 <tr>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                  <th scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                     Address
                   </th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  <th scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Amount
                   </th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  <th scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Progress
                   </th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  <th scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Starts on
                   </th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  <th scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Ends in
                   </th>
                   <th scope="col" className="relative py-3.5 pl-3 pr-4">

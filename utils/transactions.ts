@@ -42,8 +42,6 @@ export const buildVestingTxInteraction = (vesting: VestingType, tokenDecimals: n
       ])
   );
 
-  console.log(args);
-
   return new Interaction(contract, new ContractFunction("createVestingSchedule"), [
     new List(structTypeStream, args),
   ]).withSingleESDTTransfer(
