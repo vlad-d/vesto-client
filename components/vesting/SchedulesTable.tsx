@@ -62,7 +62,7 @@ export default function SchedulesTable({
       outputType: "string",
     });
 
-    setClaimable((prev) => [...prev, { streamId, amount: res }]);
+    setClaimable((prev) => [...prev, { streamId, amount: res.data }]);
 
     return res;
   };
