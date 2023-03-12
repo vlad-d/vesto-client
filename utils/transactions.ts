@@ -17,9 +17,11 @@ import {
     U64Value,
 } from '@multiversx/sdk-core/out';
 import BigNumber from 'bignumber.js';
+// @ts-ignore
+import moment from 'moment';
 
 import { VestingType } from '../common/types';
-import moment from "moment";
+
 
 const structTypeStream = new StructType("BuildingAttributes", [
   new FieldDefinition("recipient", "address", new AddressType()),
@@ -32,17 +34,19 @@ export const buildVestingTxInteraction = (vesting: VestingType, tokenDecimals: n
   const contract = new SmartContract({
     address: new Address(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS),
   });
-    console.log(moment(vesting.streams[0].start_date).unix())
+
   const args = vesting.streams.map(
     (stream) =>
       new Struct(structTypeStream, [
         new Field(new AddressValue(new Address(stream.recipient)), "recipient"),
-        new Field(new BigUIntValue(TokenPayment.fungibleFromAmount(vesting.token, stream.amount, tokenDecimals).valueOf() ), "deposit"),
+        new Field(
+          new BigUIntValue(TokenPayment.fungibleFromAmount(vesting.token, stream.amount, tokenDecimals).valueOf()),
+          "deposit"
+        ),
         new Field(new U64Value(moment(stream.start_date).add(5, "minute").unix()), "start_time"),
         new Field(new U64Value(moment(stream.end_date).unix()), "end_time"),
       ])
   );
-
 
   return new Interaction(contract, new ContractFunction("createVestingSchedule"), [
     new List(structTypeStream, args),
