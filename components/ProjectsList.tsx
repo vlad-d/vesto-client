@@ -1,7 +1,9 @@
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { VestingSchedule } from '../common/types';
 import { denominate } from '../utils/economics';
+import { projectPath } from '../utils/routes';
 import { getVestingSchedules } from '../utils/supabase';
 
 export default function ProjectsList() {
@@ -9,7 +11,6 @@ export default function ProjectsList() {
   useEffect(() => {
     (async () => {
       const vestings = await getVestingSchedules();
-      console.log(vestings);
 
       setVestings(vestings);
     })();
@@ -38,17 +39,19 @@ export default function ProjectsList() {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {vestings.map((item) => (
-                  <tr key={item.id} className="hover:cursor-pointer">
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-0">
-                      <div className="flex items-center">
-                        <div className="h-10 w-10 flex-shrink-0">
-                          <img className="h-10 w-10 rounded-full" src={item.token_metadata.assets?.svgUrl} alt="" />
+                  <tr key={item.id}>
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-0 hover:cursor-pointer">
+                      <Link href={projectPath(item.id)}>
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 flex-shrink-0">
+                            <img className="h-10 w-10 rounded-full" src={item.token_metadata.assets?.svgUrl} alt="" />
+                          </div>
+                          <div className="ml-4">
+                            <div className="font-medium text-gray-900">{item.token_metadata.name}</div>
+                            <div className="text-gray-500">{item.token_identifier}</div>
+                          </div>
                         </div>
-                        <div className="ml-4">
-                          <div className="font-medium text-gray-900">{item.token_metadata.name}</div>
-                          <div className="text-gray-500">{item.token_identifier}</div>
-                        </div>
-                      </div>
+                      </Link>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       <div className="text-gray-900">
@@ -58,10 +61,8 @@ export default function ProjectsList() {
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       <div className="text-gray-900">{item.vesting_schedule_items?.length}</div>
                     </td>
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                        View
-                      </a>
+                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 text-indigo-600 hover:text-indigo-900">
+                      <Link href={projectPath(item.id)}>View</Link>
                     </td>
                   </tr>
                 ))}
